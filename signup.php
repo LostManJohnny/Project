@@ -76,7 +76,7 @@
                 <button type="submit" class="btn btn-primary">Sign In</button>
             </form>
             <!-- Link to create account -->
-            <p>Don't have an account? <a href="./">Sign up here</a></p>
+            <p>Already have an account? <a href="./login.php">Login here</a></p>
         </div>
     </main>
     <footer>
