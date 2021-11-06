@@ -56,18 +56,15 @@ if (isset($_POST)) {
                 'Password' => $hashed_salted_pass
             ];
 
-            $statement->execute($bind_values);
+            $insert_results = $statement->execute($bind_values);
+
+            if ($insert_results) {
+                header('Location: index.php');
+                exit;
+            }
         }
     }
 }
-
-echo '<pre>';
-echo print_r($_POST);
-echo print_r($errors);
-echo print_r($sanitized);
-echo '</pre>';
-
-
 
 /**
  * Filters and sanitized the first name POST variable
@@ -314,6 +311,7 @@ function email_exists($email, $db)
 </head>
 
 <body>
+
 
 </body>
 
