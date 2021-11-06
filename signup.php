@@ -68,6 +68,8 @@
                 <input type="text" placeholder="Last Name" class="input-field mb-3" name="lname" id="lname" required>
                 <input type="date" class="input-field mb-3" name="birthdate" id="birthdate" required>
                 <input type="email" placeholder="Email" class="input-field mb-3" name="email" required>
+                <input type="text" placeholder="Username" class="input-field mb-3" name="username" id="username"
+                    required>
                 <input type="password" placeholder="Password" class="input-field mb-3" name="password" required>
                 <input type="password" placeholder="Confirm your Password" class="input-field mb-3"
                     name="password-confirm" id="password-confirm" required>
