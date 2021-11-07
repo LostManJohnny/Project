@@ -13,49 +13,31 @@ $valid_credentials = true;
 //     exit;
 // }
 
-echo '<pre>';
-echo "POST 1";
-echo print_r($_POST);
-echo '</pre>';
-
 //Checks that the form was submitted
 if (isset($_POST)) {
-    echo "PAST POST" . '<br/>';
     if ((isset($_POST['login']) && //Post was submitted through the form
             $_POST['login'] = "submit") &&
         (isset($_POST['email']) && //Email is set
             isset($_POST['password'])) //Password is set
     ) {
-        echo "LOGIN ATTEMPTED" . '<br/>';
         $sanitized['email'] = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
         //Get the user's credentials if and only if 
         $valid_credentials = valid_credentials($sanitized['email'], $_POST['password'], $db);
 
         if ($valid_credentials != false) {
-            echo "VALID CREDENTIALS" . '<br/>';
             [$db_id, $db_username, $db_email, $db_password_hashed] = $valid_credentials;
-            session_start();
             $_SESSION['loggedin'] = true;
             $_SESSION['id'] = $db_id;
             $_SESSION['username'] = $db_username;
-            // header("location: index.php");
-            // exit;
-            echo "EXIT" . '<br/>';
+            header("location: index.php");
+            exit;
         } else {
             echo "INVALID CREDENTIALS" . '<br/>';
             $valid_credentials = false;
         }
     }
 }
-
-echo '<pre>';
-echo print_r($_POST);
-echo print_r($errors);
-echo print_r($_SESSION);
-echo "CREDENTIALS" . '<br/>';
-echo print_r($valid_credentials);
-echo '</pre>';
 
 /**
  * Email - The email being used to login
