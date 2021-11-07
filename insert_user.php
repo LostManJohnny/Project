@@ -38,6 +38,7 @@ if (isset($_POST)) {
 
         //Salt and hash the password, then verify it
         $hashed_salted_pass = password_hash($sanitized['password'], PASSWORD_BCRYPT);
+
         $hashed_salted_pass_VERIFY = password_verify($sanitized['password'], $hashed_salted_pass);
 
         if ($hashed_salted_pass_VERIFY) {
@@ -45,7 +46,6 @@ if (isset($_POST)) {
             //Build and prepare the query
             $query = "INSERT INTO owners (FirstName, LastName, BirthDate, Email, Username, Password) VALUES (:FirstName, :LastName, :BirthDate, :Email, :Username, :Password)";
             $statement = $db->prepare($query);
-            echo "Query : " . $query;
             //Bind values to the query
             $bind_values = [
                 'FirstName' => $sanitized['fname'],
@@ -311,7 +311,11 @@ function email_exists($email, $db)
 </head>
 
 <body>
-
+    <?php foreach ($errors as $err) : ?>
+    <div>
+        <?= $err ?>;
+    </div>
+    <?php endforeach; ?>
 
 </body>
 
