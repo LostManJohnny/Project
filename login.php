@@ -1,48 +1,179 @@
 <?php
+require('connection.php');
 
+session_start();
+
+$errors = [];
+$sanitized = [];
+
+$valid_credentials = true;
+
+// if (isset($_SESSION)) {
+//     header("location: index.php");
+//     exit;
+// }
+
+echo '<pre>';
+echo "POST 1";
+echo print_r($_POST);
+echo '</pre>';
+
+//Checks that the form was submitted
 if (isset($_POST)) {
+    echo "PAST POST" . '<br/>';
+    if ((isset($_POST['login']) && //Post was submitted through the form
+            $_POST['login'] = "submit") &&
+        (isset($_POST['email']) && //Email is set
+            isset($_POST['password'])) //Password is set
+    ) {
+        echo "LOGIN ATTEMPTED" . '<br/>';
+        $sanitized['email'] = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+
+        //Get the user's credentials if and only if 
+        $valid_credentials = valid_credentials($sanitized['email'], $_POST['password'], $db);
+
+        if ($valid_credentials != false) {
+            echo "VALID CREDENTIALS" . '<br/>';
+            [$db_id, $db_username, $db_email, $db_password_hashed] = $valid_credentials;
+            session_start();
+            $_SESSION['loggedin'] = true;
+            $_SESSION['id'] = $db_id;
+            $_SESSION['username'] = $db_username;
+            // header("location: index.php");
+            // exit;
+            echo "EXIT" . '<br/>';
+        } else {
+            echo "INVALID CREDENTIALS" . '<br/>';
+            $valid_credentials = false;
+        }
+    }
 }
 
-/**
- * Username - Username to validate
- * Description - Checks if the username is already in use
- */
-function username_exists($username)
-{
-    //Database connection
-    require('connection.php');
+echo '<pre>';
+echo print_r($_POST);
+echo print_r($errors);
+echo print_r($_SESSION);
+echo "CREDENTIALS" . '<br/>';
+echo print_r($valid_credentials);
+echo '</pre>';
 
-    //Builds query and executes it
-    $query = `SELECT Username FROM owners WHERE Username = ${username};`;
-    $statement = $db->prepare($query);
-    $statement->execute();
-    //Checks if the username exists in the database, returns true if the username exists...
-    if ($statement->rowCount > 0) {
-        return true;
+/**
+ * Email - The email being used to login
+ * Password - The provided password to login with
+ * db - Database PDO object
+ * Description: Validates the credentials, and returns true if login is successful
+ */
+function valid_credentials($email, $password, $db)
+{
+    echo "VALID_CREDENTIALS - EMAIL EXISTS -> ";
+    echo email_exists($email, $db) . '<br/>';
+    //Check that the email is associated with an account and exists ...
+    if (email_exists($email, $db)) {
+        //Get the hashed password from the database
+        [$db_id, $db_username, $db_email, $db_password_hashed] = get_user_details($email, $db);
+        $password_provided = $password;
+
+        //If the login password verifies successfully, return the user data ... 
+        echo "VALID_CREDENTIALS - PASSWORD PROVIDED -> " . $password_provided . '<br/>';
+        echo "VALID_CREDENTIALS - DB PASSWORD -> " . $db_password_hashed . '<br/>';
+        echo "VALID_CREDENTIALS - PASSWORD_VERIFY -> " . password_verify($password_provided, $db_password_hashed) . '<br/>';
+        if (password_verify($password_provided, $db_password_hashed)) {
+            return [$db_id, $db_username, $db_email, $db_password_hashed];
+        }
+        //... otherwise return false
+        else {
+            return false;
+        }
     }
     //... otherwise return false
-    return false;
+    else {
+        return false;
+    }
 }
 
 /**
  * Username - Username to validate
  * Description - Checks if the username is already in use
  */
-function email_exists($email)
+function email_exists($email, $db)
 {
-    //Database connection
-    require('connection.php');
-
     //Builds query and executes it
-    $query = `SELECT Email FROM email WHERE Email = ${email};`;
+    $query = "SELECT Email FROM owners WHERE Email = :Email";
     $statement = $db->prepare($query);
+    $statement->bindValue('Email', $email);
     $statement->execute();
     //Checks if the email exists in the database, returns true if the email exists...
-    if ($statement->rowCount > 0) {
+    if ($statement->rowCount() > 0) {
         return true;
     }
     //... otherwise return false
     return false;
+}
+
+/**
+ * Filters and sanitized the email POST variable
+ */
+function filter_sanitize_email($errors, $sanitized)
+{
+    //Check the first name is set
+    if (!isset($_POST['email'])) {
+        array_push($errors, "Error " . (count($errors) + 1) . " - No email submitted");
+    }
+    //Check the first name is not empty
+    else if (strlen($_POST['email']) < 1) {
+        array_push($errors, "Error " . (count($errors) + 1) . " - Email cannot be empty");
+    }
+    //Checks if first name has spaces
+    else if (str_contains($_POST['email'], " ")) {
+        array_push($errors, "Error " . (count($errors) + 1) . " - Email cannot have spaces");
+    }
+    //Checks that email is invalid
+    else if (!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
+        array_push($errors, "Error " . (count($errors) + 1) . " - Not a valid format for email");
+    }
+    //Sanitizes the email field
+    else {
+        $sanitized['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    }
+
+    return [$errors, $sanitized];
+}
+
+/**
+ * Email - Email associated with the account you want the password for
+ * db - Database PDO object
+ * Description: Returns the password of an account you want
+ *      Note*: Email is a unique field in the database so should only return one result
+ */
+function get_user_details($email, $db)
+{
+    //Build, prepare and bind the query
+    $query = "SELECT OwnerID, Username, Email, Password FROM owners WHERE email = :Email";
+    $statement = $db->prepare($query);
+    $statement->bindValue('Email', $email);
+
+    //Execute the query
+    $statement->execute();
+
+    //If no results were returned, the account doesn't exist
+    if ($statement->rowCount() == 0) {
+        return -1;
+    }
+    //If more than one result was returned, something bad happened a while ago
+    else if ($statement->rowCount() > 1) {
+        return -2;
+    }
+    //This is good, very good. 
+    else if ($statement->rowCount() == 1) {
+        $row = $statement->fetch();
+        return [$row['OwnerID'], $row['Username'], $row['Email'], $row['Password']];
+    }
+    //This would only happen if rowCount was < 0 and I don't even want to 
+    //think about what that could mean
+    //So we'll just return a number and call it a day.
+    else {
+        return -3;
+    }
 }
 ?>
 
@@ -106,9 +237,21 @@ function email_exists($email)
             <!-- Sign in form -->
             <form action="" method="post" class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary">
                 <h3 class="mx-auto mb-4">Sign In</h3>
-                <input type="email" placeholder="Email" class="input-field mb-3" name="email">
-                <input type="password" placeholder="Password" class="input-field mb-3" name="password">
-                <button type="submit" class="btn btn-primary">Sign In</button>
+
+                <!-- On failed login attempt -->
+                <?php if (!$valid_credentials) : ?>
+                <h6 class="text-danger">Email or Password is incorrect</h4>
+
+                    <input type="email" placeholder="Email" class="input-field mb-3" name="email"
+                        value="<?= $_POST['email'] ?>">
+
+                    <!-- On first login attempt -->
+                    <?php else : ?>
+                    <input type="email" placeholder="Email" class="input-field mb-3" name="email">
+                    <?php endif; ?>
+
+                    <input type="password" placeholder="Password" class="input-field mb-3" name="password">
+                    <button type="submit" name="login" value="submit" class="btn btn-primary">Sign In</button>
             </form>
             <!-- Link to create account -->
             <p>Don't have an account? <a href="./signup.php">Sign up here</a></p>
