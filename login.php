@@ -184,8 +184,9 @@ function get_user_details($email, $db)
             <div class="d-flex flex-row align-items-center justify-content-between mt-3">
 
                 <!-- Logo -->
-                <img id="logo" src="./images/icons/logo.png" alt="Logo" class="cursor-pointer">
-
+                <a href="./index.php">
+                    <img id="logo" src="./images/icons/logo.png" alt="Logo" class="cursor-pointer">
+                </a>
                 <!-- Search Bar -->
                 <form action="">
                     <div class="input-group">

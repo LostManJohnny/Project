@@ -59,7 +59,9 @@ function getImagePath($cardID, $small)
     <header>
         <div class="container">
             <div class="d-flex flex-row align-items-center justify-content-between mt-3">
-                <img id="logo" src="./images/icons/logo.png" alt="Logo">
+                <a href="./index.php">
+                    <img id="logo" src="./images/icons/logo.png" alt="Logo" class="cursor-pointer">
+                </a>
                 <form action="">
                     <div class="input-group">
                         <div class="form-outline">
