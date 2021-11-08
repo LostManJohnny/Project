@@ -4,5 +4,5 @@ session_start();
 $_SESSION = [];
 
 session_destroy();
-header("location: index.php");
+header("location: ./../index.php");
 exit;
