@@ -1,7 +1,7 @@
 <?php
 if (isset($_GET)) {
 
-    require('./../connection.php');
+    require('./connection.php');
 
     $response;
 
