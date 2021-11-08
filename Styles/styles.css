@@ -5,3 +5,15 @@
 .w-35 {
   width: 35%;
 }
+
+#dropdownMenuButton {
+  background: url("./../images/icons/login.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  height: 30px;
+}
+
+.hover-gray button.hover-gray:hover {
+  background-color: #e4e4e4;
+}
