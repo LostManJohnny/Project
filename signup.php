@@ -17,6 +17,7 @@
 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="./js/signup.js"></script>
 
     <title>Login</title>
 </head>
@@ -61,19 +62,39 @@
     <main>
         <div class="container w-25">
             <!-- Sign in form -->
-            <form action="./insert_user.php" method="post"
-                class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary">
+            <form action="./api/insert_user.php" method="post"
+                class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary" id="signup-form">
                 <h3 class="mx-auto mb-4">Create an Account</h3>
-                <input type="text" placeholder="First Name" class="input-field mb-3" name="fname" id="fname" required>
-                <input type="text" placeholder="Last Name" class="input-field mb-3" name="lname" id="lname" required>
-                <input type="date" class="input-field mb-3" name="birthdate" id="birthdate" required>
-                <input type="email" placeholder="Email" class="input-field mb-3" name="email" required>
-                <input type="text" placeholder="Username" class="input-field mb-3" name="username" id="username"
-                    required>
-                <input type="password" placeholder="Password" class="input-field mb-3" name="password" required>
-                <input type="password" placeholder="Confirm your Password" class="input-field mb-3"
-                    name="password-confirm" id="password-confirm" required>
-                <button type="submit" class="btn btn-primary">Sign In</button>
+                <div id="account-error" class="text-danger">
+
+                </div>
+                <input type="text" placeholder="First Name" class="input-field mt-3" name="fname" id="fname">
+                <div id="fname-error" class="text-danger" hidden>
+
+                </div>
+                <input type="text" placeholder="Last Name" class="input-field mt-3" name="lname" id="lname">
+                <div id="lname-error" class="text-danger" hidden>
+
+                </div>
+                <input type="date" class="input-field mt-3" name="birthdate" id="birthdate">
+                <div id="birthdate-error" class="text-danger" hidden>
+
+                </div>
+                <input type="email" placeholder="Email" class="input-field mt-3" name="email" id="email">
+                <div id="email-error" class="text-danger" hidden>
+
+                </div>
+                <input type="text" placeholder="Username" class="input-field mt-3" name="username" id="username">
+                <div id="username-error" class="text-danger" hidden>
+
+                </div>
+                <input type="password" placeholder="Password" class="input-field mt-3" name="password" id="password">
+                <input type="password" placeholder="Confirm your Password" class="input-field mt-3"
+                    name="password-confirm" id="password-confirm">
+                <div id="password-error" class="text-danger" hidden>
+
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Sign Up</button>
             </form>
             <!-- Link to create account -->
             <p>Already have an account? <a href="./login.php">Login here</a></p>
