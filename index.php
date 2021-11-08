@@ -1,9 +1,15 @@
 <?php
 require('connection.php');
 
+session_start();
+
 $query = "SELECT * FROM Cards";
 $statement = $db->prepare($query);
 $statement->execute();
+
+//Checks if they are logged in by checking if the loggin SESSION variable is set ..
+//.. and if it is set to true
+$logged_in = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
 
 function DownloadImage($url, $cardID, $small)
 {
