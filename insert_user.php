@@ -21,8 +21,8 @@ if (isset($_POST)) {
     }
 
     //Perform checks
-    $email_exists = email_exists($sanitized['email'], $db);
-    $username_exists = username_exists($sanitized['username'], $db);
+    $email_exists = isset($sanitized['email']) && email_exists($sanitized['email'], $db);
+    $username_exists = isset($sanitized['username']) && username_exists($sanitized['username'], $db);
 
     //Checks if the email exists
     if ($email_exists) {
