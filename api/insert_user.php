@@ -59,7 +59,7 @@ if (isset($_POST)) {
             $insert_results = $statement->execute($bind_values);
 
             if ($insert_results) {
-                header('Location: index.php');
+                header('Location: ./../index.php');
                 exit;
             }
         }
