@@ -105,7 +105,11 @@ function getImagePath($cardID, $small)
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a href="#" class="dropdown-item">Profile</a>
                             <a href="#" class="dropdown-item">Collections</a>
-                            <a href="./logout.php" class="dropdown-item">Logout</a>
+                            <a href="./api/logout.php" class="dropdown-item">Logout</a>
+                            <?php if (isset($_SESSION['username']) && $_SESSION['username'] == "admin_user") : ?>
+                            <hr>
+                            <a href="./admin_dashboard.php" class="dropdown-item">Admin Dashboard</a>
+                            <?php endif; ?>
                         </div>
                     </div>
 
