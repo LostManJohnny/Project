@@ -5,30 +5,30 @@ if (isset($_GET)) {
 
     $response;
 
-    if (isset($_GET['username']) && $_GET['username'] != "") {
+    if (isset($_GET['email']) && $_GET['email'] != "") {
         header('Content-Type: application/json; charset=utf-8');
-        $query = "SELECT username FROM owners WHERE username = :username";
+        $query = "SELECT email FROM owners WHERE email = :email";
         $statement = $db->prepare($query);
-        $statement->bindValue("username", $_GET['username']);
+        $statement->bindValue("email", $_GET['email']);
         $statement->execute();
 
         if ($statement->rowCount() > 0) {
             $response = [
                 "status" => 200,
-                "username" => $_GET['username'],
+                "email" => $_GET['email'],
                 "results" => true
             ];
         } else {
             $response = [
                 "status" => 200,
-                "username" => $_GET['username'],
+                "email" => $_GET['email'],
                 "results" => false
             ];
         }
     } else {
         $response = [
             "status" => 400,
-            "error" => "Bad Request, username not set or empty",
+            "error" => "Bad Request, email not set or empty",
             "results" => true
         ];
     }
