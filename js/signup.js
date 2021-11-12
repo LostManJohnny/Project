@@ -1,3 +1,11 @@
+/**
+ * Author: Matthew Major
+ * Date: Nov 11, 2021
+ *
+ * Handles signup validation. Ensures that data integrity is kept intact.
+ * Ensure that usernames and emails are not duplicates.
+ */
+
 document.addEventListener("DOMContentLoaded", load);
 
 /**
