@@ -1,8 +1,6 @@
 <?php
 //Start session
 session_start();
-//Database connection
-require('./api/connection.php');
 //Ensure only admin access
 require('./api/authenticate.php');
 
@@ -13,6 +11,27 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
         "alert(\"Unauthorized access to admin dashboard.\\nClick ok to return to the home page.\");" .
         "window.location.href='./index.php'" .
         "</script type=\'text/javascript\'>";
+} else {
+    //Database connection
+    require('./api/connection.php');
+
+    //Get all the users from the database
+    $query = "SELECT OwnerID as ID, CONCAT(FirstName, CONCAT(' ', LastName)) as Fullname, Joindate, Email, Username FROM Owners";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $users = $statement->fetchAll();
+
+    //Get all the cards from the database
+    $query = "SELECT CardID as ID, Name, Foil, Promo, setCode FROM Cards";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $cards = $statement->fetchAll();
+
+    //Get all the cards from the database
+    $query = "SELECT CollectionID as ID, OwnerID as Owner, CollectionName as Name FROM Collections";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $collections = $statement->fetchAll();
 }
 
 ?>
@@ -98,16 +117,62 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
         </div>
     </header>
     <main>
-        <div id="sections" class="container">
-            <section id="users">
+        <div id="sections" class="d-flex">
+            <div id="sections" class="container mt-4">
+                <section id="actions" class="mb-3">
+                    <form action="./api/add_user.php" method="post">
+                        <button id="btn-add_user" name="add" class="btn btn-success">Add User</button>
+                    </form>
+                </section>
+                <!-- $query = "SELECT CONCAT(FirstName, CONCAT(' ', LastName)) as Fullname, Joindate, Email, Username FROM Owners"; -->
+                <section id="users" class="overflow-auto" style="height:400px;">
+                    <h1>Site Users</h1>
+                    <ul id="users-list">
+                        <?php foreach ($users as $user) : ?>
+                        <li>
+                            <h3><?= $user['ID'] ?></h3>
+                            <h3><?= $user['Fullname'] ?></h3>
+                            <h5><?= $user['Username'] ?></h5>
+                            <p><?= $user['Email'] ?></p>
+                            <p><?= $user['Joindate'] ?></p>
+                        </li>
+                        <form action="./api/edit_user.php" method="post">
+                            <button id="btn-update_user" name="edit" class="btn btn-secondary"
+                                value="<?= $user['ID'] ?>">Edit User</button>
+                        </form>
+                        <?php endforeach; ?>
 
-            </section>
-            <section id="cards">
-
-            </section>
-            <section id="collections">
-
-            </section>
+                    </ul>
+                </section>
+                <!-- $query = "SELECT CardID as ID, Name, Foil, Promo, setCode FROM Cards"; -->
+                <section id="cards" class="overflow-auto" style="height:400px;">
+                    <h1>Site Cards</h1>
+                    <ul>
+                        <?php foreach ($cards as $card) : ?>
+                        <li>
+                            <h3><?= $card['ID'] ?></h3>
+                            <h3><?= $card['Name'] ?></h3>
+                            <h5><?= $card['Foil'] ?></h5>
+                            <p><?= $card['Promo'] ?></p>
+                            <p><?= $card['setCode'] ?></p>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </section>
+                <!-- $query = "SELECT CollectionID as ID, OwnerID as Owner, CollectionName as Name FROM Cards"; -->
+                <section id="collections" class="overflow-auto" style="height:400px;">
+                    <h1>Site Collections</h1>
+                    <ul>
+                        <?php foreach ($cards as $card) : ?>
+                        <li>
+                            <h3><?= $card['ID'] ?></h3>
+                            <h3><?= $card['Owner'] ?></h3>
+                            <h5><?= $card['Name'] ?></h5>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </section>
+            </div>
         </div>
     </main>
     <footer>
