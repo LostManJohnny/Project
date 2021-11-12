@@ -76,7 +76,7 @@
                 <div id="lname-error" class="text-danger" hidden>
 
                 </div>
-                <input type="date" class="input-field mt-3" name="birthdate" id="birthdate">
+                <input type="date" class="input-field mt-3" name="birthdate" id="birthdate" placeholder="Birthdate">
                 <div id="birthdate-error" class="text-danger" hidden>
 
                 </div>
@@ -89,9 +89,12 @@
 
                 </div>
                 <input type="password" placeholder="Password" class="input-field mt-3" name="password" id="password">
+                <div id="password-error" class="text-danger" hidden>
+
+                </div>
                 <input type="password" placeholder="Confirm your Password" class="input-field mt-3"
                     name="password-confirm" id="password-confirm">
-                <div id="password-error" class="text-danger" hidden>
+                <div id="password-confirm-error" class="text-danger" hidden>
 
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Sign Up</button>
