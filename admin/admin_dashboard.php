@@ -50,18 +50,22 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 
     <!-- Personal -->
-    <link rel="stylesheet" href="./Styles/styles.css">
+    <link rel="stylesheet" href="<?= $root . "Styles/styles.css" ?>">
 
     <title>Admin Dashboard</title>
 </head>
@@ -87,28 +91,29 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                 <div class="d-flex flex-row">
                     <!-- If not logged in, show the LOGIN link -->
                     <?php if (!$logged_in) : ?>
-                        <a href="<?= $root . "login.php" ?>" id="login" class="d-flex flex-column align-items-center mr-3">
-                            <img src="<?= $images . "icons/login.png" ?>" alt="Login">
-                            <h6 class="">LOGIN</h6>
-                        </a>
-                        <!-- If already logged in, show the ACCOUNT link -->
+                    <a href="<?= $root . "login.php" ?>" id="login" class="d-flex flex-column align-items-center mr-3">
+                        <img src="<?= $images . "icons/login.png" ?>" alt="Login">
+                        <h6 class="">LOGIN</h6>
+                    </a>
+                    <!-- If already logged in, show the ACCOUNT link -->
                     <?php else : ?>
-                        <div class="dropdown d-flex flex-column">
-                            <button class="btn dropdown-toggle hover-gray:hover" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            </button>
-                            <label for="dropdownMenuButton" class="cursor-pointer">ACCOUNT</label>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a href="#" class="dropdown-item">Profile</a>
-                                <a href="#" class="dropdown-item">Collections</a>
-                                <a href="<?= $api . "logout.php" ?>" class="dropdown-item">Logout</a>
-                                <?php if (isset($_SESSION['username']) && $_SESSION['username'] == "admin_user") : ?>
-                                    <hr>
-                                    <a href="<?= $root . "admin/admin_dashboard.php" ?>" class="dropdown-item">
-                                        Admin Dashboard
-                                    </a>
-                                <?php endif; ?>
-                            </div>
+                    <div class="dropdown d-flex flex-column">
+                        <button class="btn dropdown-toggle hover-gray:hover" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </button>
+                        <label for="dropdownMenuButton" class="cursor-pointer">ACCOUNT</label>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a href="#" class="dropdown-item">Profile</a>
+                            <a href="#" class="dropdown-item">Collections</a>
+                            <a href="<?= $api . "logout.php" ?>" class="dropdown-item">Logout</a>
+                            <?php if (isset($_SESSION['username']) && $_SESSION['username'] == "admin_user") : ?>
+                            <hr>
+                            <a href="<?= $root . "admin/admin_dashboard.php" ?>" class="dropdown-item">
+                                Admin Dashboard
+                            </a>
+                            <?php endif; ?>
                         </div>
+                    </div>
 
                     <?php endif; ?>
                     <!-- The cart -->
@@ -125,7 +130,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
             <div id="sections" class="container mt-4">
                 <section id="actions" class="mb-3">
                     <form action="./add_user.php" method="post">
-                        <button id="btn-add_user" name="add" value="add" class="btn btn-success">Add User</button>
+                        <button id="btn-add_user" class="btn btn-success">Add User</button>
                     </form>
                 </section>
                 <!-- $query = "SELECT CONCAT(FirstName, CONCAT(' ', LastName)) as Fullname, Joindate, Email, Username FROM Owners"; -->
@@ -133,16 +138,17 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                     <h1>Site Users</h1>
                     <ul id="users-list">
                         <?php foreach ($users as $user) : ?>
-                            <li>
-                                <h3><?= $user['ID'] ?></h3>
-                                <h3><?= $user['Fullname'] ?></h3>
-                                <h5><?= $user['Username'] ?></h5>
-                                <p><?= $user['Email'] ?></p>
-                                <p><?= $user['Joindate'] ?></p>
-                            </li>
-                            <form action="./edit_user.php" method="post">
-                                <button id="btn-update_user" name="edit" class="btn btn-secondary" value="<?= $user['ID'] ?>">Edit User</button>
-                            </form>
+                        <li>
+                            <h3><?= $user['ID'] ?></h3>
+                            <h3><?= $user['Fullname'] ?></h3>
+                            <h5><?= $user['Username'] ?></h5>
+                            <p><?= $user['Email'] ?></p>
+                            <p><?= $user['Joindate'] ?></p>
+                        </li>
+                        <form action="./edit_user.php" method="post">
+                            <button id="btn-update_user" name="edit" class="btn btn-secondary"
+                                value="<?= $user['ID'] ?>">Edit User</button>
+                        </form>
                         <?php endforeach; ?>
 
                     </ul>
@@ -152,13 +158,13 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                     <h1>Site Cards</h1>
                     <ul>
                         <?php foreach ($cards as $card) : ?>
-                            <li>
-                                <h3><?= $card['ID'] ?></h3>
-                                <h3><?= $card['Name'] ?></h3>
-                                <h5><?= $card['Foil'] ?></h5>
-                                <p><?= $card['Promo'] ?></p>
-                                <p><?= $card['setCode'] ?></p>
-                            </li>
+                        <li>
+                            <h3><?= $card['ID'] ?></h3>
+                            <h3><?= $card['Name'] ?></h3>
+                            <h5><?= $card['Foil'] ?></h5>
+                            <p><?= $card['Promo'] ?></p>
+                            <p><?= $card['setCode'] ?></p>
+                        </li>
                         <?php endforeach; ?>
                     </ul>
                 </section>
@@ -167,11 +173,11 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                     <h1>Site Collections</h1>
                     <ul>
                         <?php foreach ($cards as $card) : ?>
-                            <li>
-                                <h3><?= $card['ID'] ?></h3>
-                                <h3><?= $card['Owner'] ?></h3>
-                                <h5><?= $card['Name'] ?></h5>
-                            </li>
+                        <li>
+                            <h3><?= $card['ID'] ?></h3>
+                            <h3><?= $card['Owner'] ?></h3>
+                            <h5><?= $card['Name'] ?></h5>
+                        </li>
                         <?php endforeach; ?>
                     </ul>
                 </section>
