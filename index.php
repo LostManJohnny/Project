@@ -11,6 +11,9 @@ $statement->execute();
 //.. and if it is set to true
 $logged_in = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
 
+/**
+ * 
+ */
 function DownloadImage($url, $cardID, $small)
 {
     //Checks if the small image flag is set and checks if the image already exists...
@@ -33,6 +36,9 @@ function DownloadImage($url, $cardID, $small)
     return $result != false;
 }
 
+/**
+ * 
+ */
 function getImagePath($cardID, $small)
 {
     if ($small && file_exists('.\\images\\small\\' . $cardID)) {
@@ -42,6 +48,16 @@ function getImagePath($cardID, $small)
     } else {
         return null;
     }
+}
+
+function console_log($output, $with_script_tags = true)
+{
+    $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) .
+        ');';
+    if ($with_script_tags) {
+        $js_code = '<script>' . $js_code . '</script>';
+    }
+    echo $js_code;
 }
 
 ?>
@@ -56,7 +72,6 @@ function getImagePath($cardID, $small)
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="./Styles/styles.css">
-    <title>Home Page</title>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -68,6 +83,7 @@ function getImagePath($cardID, $small)
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
+    <title>Home Page</title>
 </head>
 
 <body>
