@@ -124,7 +124,7 @@ function console_log($output, $with_script_tags = true)
                             <a href="./api/logout.php" class="dropdown-item">Logout</a>
                             <?php if (isset($_SESSION['username']) && $_SESSION['username'] == "admin_user") : ?>
                             <hr>
-                            <a href="./admin_dashboard.php" class="dropdown-item">Admin Dashboard</a>
+                            <a href="./admin/admin_dashboard.php" class="dropdown-item">Admin Dashboard</a>
                             <?php endif; ?>
                         </div>
                     </div>
