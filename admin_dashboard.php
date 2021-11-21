@@ -121,7 +121,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
             <div id="sections" class="container mt-4">
                 <section id="actions" class="mb-3">
                     <form action="./api/add_user.php" method="post">
-                        <button id="btn-add_user" name="add" class="btn btn-success">Add User</button>
+                        <button id="btn-add_user" name="add" value="add" class="btn btn-success">Add User</button>
                     </form>
                 </section>
                 <!-- $query = "SELECT CONCAT(FirstName, CONCAT(' ', LastName)) as Fullname, Joindate, Email, Username FROM Owners"; -->
