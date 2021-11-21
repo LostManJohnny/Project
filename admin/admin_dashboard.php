@@ -1,4 +1,13 @@
 <?php
+
+if (isset($_GET['status'])) {
+    if ($_GET['status'] == "success") {
+        $add_user_status = true;
+    } else {
+        $add_user_status = false;
+    }
+}
+
 $root = "./../";
 $api = $root . "api/";
 $images = $root . "images/";
@@ -66,6 +75,16 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
 
     <!-- Personal -->
     <link rel="stylesheet" href="<?= $root . "Styles/styles.css" ?>">
+    <script>
+    if (<?= isset($add_user_status) ?>) {
+        if (<?= $add_user_status == true ?>) {
+            alert("User added successfully");
+        } else {
+            alert("Error when adding the user");
+        }
+        window.location.href = "./admin_dashboard.php";
+    }
+    </script>
 
     <title>Admin Dashboard</title>
 </head>

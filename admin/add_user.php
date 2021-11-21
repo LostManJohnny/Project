@@ -346,7 +346,7 @@ function email_exists($email, $db)
 
     <!-- Personal -->
     <link rel="stylesheet" href="<?= $root . "Styles/styles.css" ?>">
-    <script src="<?= $root . "js/signup.js" ?>"></script>
+    <script src="<?= $root . "js/adduser.js" ?>"></script>
 
     </script>
 
@@ -354,12 +354,6 @@ function email_exists($email, $db)
 </head>
 
 <body>
-    <script>
-    console.log("<?= $alert_msg ?>");
-    if ("<?= $alert_msg ?>" != "") {
-        alert("<?= $alert_msg ?>");
-    }
-    </script>
     <header>
         <div class="container">
             <div class="d-flex flex-row align-items-center justify-content-between mt-3">
