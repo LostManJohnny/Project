@@ -2,19 +2,17 @@
 
 $logged_in = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
 
-$alert_msg = "";
-if (isset($_GET) && isset($_GET['status']) && $_GET['status'] == 400) {
-    $alert_msg = "An error occured then inserting the user into the database\\n";
-
-    if (isset($_GET['email']) && $_GET['email'] == "exists") {
-        $alert_msg = $alert_msg . "The email provided already exists\\n";
-    }
-
-    if (isset($_GET['username']) && $_GET['username'] == "exists") {
-        $alert_msg = $alert_msg . "The username provided already exists";
+$status = null;
+$msg = "";
+if (isset($_GET['status'])) {
+    if ($_GET['status'] == "success") {
+        $status = true;
+        $msg = "Success";
+    } else {
+        $status = false;
+        $msg = "Failed";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -43,14 +41,19 @@ if (isset($_GET) && isset($_GET['status']) && $_GET['status'] == 400) {
 
     <!-- Personal -->
     <link rel="stylesheet" href="./Styles/styles.css">
-    <script src="./js/signup.js"></script>
     <script>
-    // if ("<?= $alert_msg ?>" != "") {
-    //     alert("<?= $alert_msg ?>");
-    // }
+    if (<?= $status ?>) {
+        setTimeout(() => {
+            window.location.href = './index.php';
+        }, 2000);
+    } else {
+        setTimeout(() => {
+            window.location.href = './signup.php';
+        }, 2000);
+    }
     </script>
 
-    <title>Login</title>
+    <title>Sign Up <?= $msg ?></title>
 </head>
 
 <body>
@@ -106,53 +109,17 @@ if (isset($_GET) && isset($_GET['status']) && $_GET['status'] == 400) {
             </div>
         </div>
     </header>
+
     <main>
-        <div class="container w-25">
-            <!-- Sign up form -->
-            <form action="./api/insert_user.php" method="post"
-                class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary" id="signup-form">
-                <h3 class="mx-auto mb-4">Create an Account</h3>
-                <div id="account-error" class="text-danger">
-
-                </div>
-                <input type="text" placeholder="First Name" class="input-field mt-3" name="fname" id="fname">
-                <div id="fname-error" class="text-danger" hidden>
-
-                </div>
-                <input type="text" placeholder="Last Name" class="input-field mt-3" name="lname" id="lname">
-                <div id="lname-error" class="text-danger" hidden>
-
-                </div>
-                <input type="date" class="input-field mt-3" name="birthdate" id="birthdate" placeholder="Birthdate">
-                <div id="birthdate-error" class="text-danger" hidden>
-
-                </div>
-                <input type="email" placeholder="Email" class="input-field mt-3" name="email" id="email">
-                <div id="email-error" class="text-danger" hidden>
-
-                </div>
-                <input type="text" placeholder="Username" class="input-field mt-3" name="username" id="username">
-                <div id="username-error" class="text-danger" hidden>
-
-                </div>
-                <input type="password" placeholder="Password" class="input-field mt-3" name="password" id="password">
-                <div id="password-error" class="text-danger" hidden>
-
-                </div>
-                <input type="password" placeholder="Confirm your Password" class="input-field mt-3"
-                    name="password-confirm" id="password-confirm">
-                <div id="password-confirm-error" class="text-danger" hidden>
-
-                </div>
-                <button id="btn-signup" type="submit" class="btn btn-primary mt-3">Sign Up</button>
-            </form>
-            <!-- Link to create account -->
-            <p>Already have an account? <a href="./login.php">Login here</a></p>
+        <div class="container">
+            <?php if ($status) : ?>
+            <h1>Sign up was successful, you will now be redirected back to the home page.</h1>
+            <?php else : ?>
+            <h1>Sign up was unsuccessful, you will now be redirected back to the signup page.</h1>
+            <?php endif; ?>
         </div>
     </main>
-    <footer>
 
-    </footer>
 </body>
 
 </html>

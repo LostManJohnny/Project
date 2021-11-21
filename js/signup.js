@@ -16,7 +16,7 @@ function load() {
   let signup_form = document.getElementById("signup-form");
 
   //Wait for promise to resolve when form is submitted
-  signup_form.addEventListener("submit", (e) => {
+  signup_form.addEventListener("submit", async (e) => {
     form_onSubmit(e);
   });
 }
@@ -27,6 +27,8 @@ function load() {
  *   data integrity is kept intact.
  */
 function form_onSubmit(e) {
+  e.preventDefault();
+
   //Get the form elemnt
   let signup_form = document.getElementById("signup-form");
   //Get an array of the inputs
@@ -48,114 +50,124 @@ function form_onSubmit(e) {
     email_check = check_email(document.getElementById("email").value);
   }
 
-  //Does the remaining checks
-  if (!errors) {
-    //Regex for sepecific fields
-    let special_characters = /[!@#$%^&*()_+=\[\]{};:"\\|,.<>\/?(0-9)]+/;
-    let email =
-      /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
-    let username = /^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
+  Promise.all([username_check, email_check]).then(
+    ([username_check, email_check]) => {
+      //Does the remaining checks
+      if (!errors) {
+        //Regex for sepecific fields
+        let special_characters = /[!@#$%^&*()_+=\[\]{};:"\\|,.<>\/?(0-9)]+/;
+        let email =
+          /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+        let username = /^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
 
-    for (let input of inputs) {
-      //The id of the element
-      let id = input.id;
-      //The id of the error div
-      let error_id = input.id + "-error";
-      //Error text
-      let error_text = "";
+        for (let input of inputs) {
+          //The id of the element
+          let id = input.id;
+          //The id of the error div
+          let error_id = input.id + "-error";
+          //Error text
+          let error_text = "";
 
-      //Perform check based on the input's id
-      switch (id) {
-        //First name input validation
-        case "fname":
-          if (input.value.length == 0) {
-            error_text = "First name cannot be empty";
-          } else if (special_characters.test(input.value)) {
-            error_text = "Please only use letters, ' and - in the name fields";
+          //Perform check based on the input's id
+          switch (id) {
+            //First name input validation
+            case "fname":
+              if (input.value.length == 0) {
+                error_text = "First name cannot be empty";
+              } else if (special_characters.test(input.value)) {
+                error_text =
+                  "Please only use letters, ' and - in the name fields";
+              }
+              break;
+            //Last name input validation
+            case "lname":
+              if (input.value.length == 0) {
+                error_text = "Last name cannot be empty";
+              } else if (special_characters.test(input.value)) {
+                error_text =
+                  "Please only use letters, ' and - in the name fields";
+              }
+              break;
+            //Birthdate input validation
+            case "birthdate":
+              if (input.value.length == 0) {
+                error_text = "Birthdate name cannot be empty";
+              } else if (Date.parse(input.value) - Date.parse(new Date()) > 0) {
+                error_text = "Birthdate cannot be in the future";
+              }
+              break;
+            //Email input validation
+            case "email":
+              if (input.value.length == 0) {
+                error_text = "Email cannot be empty";
+              } else if (!email.test(input.value)) {
+                error_text = "Invalid email";
+              } else if (email_check) {
+                error_text =
+                  "Email is already in use, please select something new";
+              }
+              break;
+            //Username input validation
+            case "username":
+              if (input.value.length < 8 || input.value.length > 20) {
+                error_text = "Username must be between 8 - 20 characters";
+              } else if (!username.test(input.value)) {
+                error_text =
+                  "Invalid characters in the username, only use letters and numbers";
+              } else if (input.value.includes("admin")) {
+                error_text =
+                  "Username cannot contain the word admin, please select a new username";
+              } else if (username_check) {
+                error_text =
+                  "Username is already in use, please select something new";
+              }
+              break;
+            //Password input validation
+            case "password":
+              let confirm = document.getElementById("password-confirm");
+              if (input.value == "") {
+                error_text = "Password cannot be empty";
+              } else if (input.value.length < 8) {
+                error_text =
+                  "Please make your password at least 8 characters long";
+              } else if (input.value != confirm.value) {
+                error_text = "Passwords do not match";
+              }
+              break;
+            default:
+              break;
           }
-          break;
-        //Last name input validation
-        case "lname":
-          if (input.value.length == 0) {
-            error_text = "Last name cannot be empty";
-          } else if (special_characters.test(input.value)) {
-            error_text = "Please only use letters, ' and - in the name fields";
-          }
-          break;
-        //Birthdate input validation
-        case "birthdate":
-          if (input.value.length == 0) {
-            error_text = "Birthdate name cannot be empty";
-          } else if (Date.parse(input.value) - Date.parse(new Date()) > 0) {
-            error_text = "Birthdate cannot be in the future";
-          }
-          break;
-        //Email input validation
-        case "email":
-          console.log("Email Check: " + email_check);
-          console.log(email_check);
-          if (input.value.length == 0) {
-            error_text = "Email cannot be empty";
-          } else if (!email.test(input.value)) {
-            error_text = "Invalid email";
-          }
-          // else if (email_result) {
-          //   error_text = "Email is already in use, please select something new";
-          // }
-          break;
-        //Username input validation
-        case "username":
-          console.log("Username Check: ");
-          console.log(username_check);
 
-          if (input.value.length < 8 || input.value.length > 20) {
-            error_text = "Username must be between 8 - 20 characters";
-          } else if (!username.test(input.value)) {
-            error_text =
-              "Invalid characters in the username, only use letters and numbers";
-          } else if (input.value.includes("admin")) {
-            error_text =
-              "Username cannot contain the word admin, please select a new username";
+          //If the error text is not empty, then an error occured
+          if (error_text != "") {
+            //Set error marker to true
+            errors = true;
+            let error_div = document.getElementById(error_id);
+            //Reveal and provide error text to the error div
+            if (error_div != null) {
+              error_div.innerHTML = error_text;
+              error_div.toggleAttribute("hidden");
+            }
           }
-          // else if (username_result) {
-          //   error_text =
-          //     "Username is already in use, please select something new";
-          // }
-          break;
-
-        //Password input validation
-        case "password":
-          let confirm = document.getElementById("password-confirm");
-          if (input.value == "") {
-            error_text = "Password cannot be empty";
-          } else if (input.value.length < 8) {
-            error_text = "Please make your password at least 8 characters long";
-          } else if (input.value != confirm.value) {
-            error_text = "Passwords do not match";
-          }
-          break;
-        default:
-          break;
-      }
-
-      //If the error text is not empty, then an error occured
-      if (error_text != "") {
-        //Set error marker to true
-        errors = true;
-        let error_div = document.getElementById(error_id);
-        //Reveal and provide error text to the error div
-        if (error_div != null) {
-          error_div.innerHTML = error_text;
-          error_div.toggleAttribute("hidden");
         }
       }
-    }
-  }
 
-  //If an error occured, prevent the form from submitting
-  if (errors) {
-    e.preventDefault();
-  }
+      //If no errors occured, post the data to the insert page
+      if (!errors) {
+        let result = fetch("./api/insert_user.php", {
+          method: "POST",
+          body: new FormData(document.getElementById("signup-form")),
+        });
+        result.then((result) => {
+          if (result["status"] == 200) {
+            window.location.href = "./signup_results.php?status=success";
+          } else {
+            window.location.href = "./signup_results.php?status=failure";
+          }
+        });
+      }
+    }
+  );
 }
 
 /**
@@ -181,7 +193,13 @@ function clear_errors() {
  */
 async function check_username(username) {
   let valid_username = await fetch(
-    `./api/validate_username.php?username=${username}`
+    `./api/validate_username.php?username=${username}`,
+    {
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
   );
 
   let data = await valid_username.json();
@@ -198,7 +216,12 @@ async function check_username(username) {
  * Description: Checks the database to verify if the email has been used already
  */
 async function check_email(email) {
-  let valid_email = await fetch(`./api/validate_email.php?email=${email}`);
+  let valid_email = await fetch(`./api/validate_email.php?email=${email}`, {
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   let data = await valid_email.json();
 
