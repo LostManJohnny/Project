@@ -1,5 +1,15 @@
 <?php
+if (isset($_GET) && isset($_GET['status']) && $_GET['status'] == 400) {
+    $alert_msg = "An error occured then inserting the user into the database\\n";
 
+    if (isset($_GET['email']) && $_GET['email'] == "exists") {
+        $alert_msg = $alert_msg . "The email provided already exists\\n";
+    }
+
+    if (isset($_GET['username']) && $_GET['username'] == "exists") {
+        $alert_msg = $alert_msg . "The username provided already exists";
+    }
+}
 
 ?>
 
@@ -18,6 +28,9 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="./js/signup.js"></script>
+    <script>
+    alert("<?= $alert_msg ?>");
+    </script>
 
     <title>Login</title>
 </head>
@@ -61,7 +74,7 @@
     </header>
     <main>
         <div class="container w-25">
-            <!-- Sign in form -->
+            <!-- Sign up form -->
             <form action="./api/insert_user.php" method="post"
                 class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary" id="signup-form">
                 <h3 class="mx-auto mb-4">Create an Account</h3>

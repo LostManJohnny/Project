@@ -17,15 +17,16 @@ function load() {
 
   //Wait for promise to resolve when form is submitted
   signup_form.addEventListener("submit", (e) => {
-    Promise.resolve(form_onSubmit(e));
+    form_onSubmit(e);
   });
 }
+
 /**
  * e: The submit event
  * Description: Is called when the form is submitted. Validates the form contents to ensure that
  *   data integrity is kept intact.
  */
-async function form_onSubmit(e) {
+function form_onSubmit(e) {
   //Get the form elemnt
   let signup_form = document.getElementById("signup-form");
   //Get an array of the inputs
@@ -40,15 +41,11 @@ async function form_onSubmit(e) {
 
   //Perform async check to databse for username and email
   if (document.getElementById("username").value.length > 0) {
-    username_check = Promise.resolve(
-      check_username(document.getElementById("username").value)
-    );
+    username_check = check_username(document.getElementById("username").value);
   }
 
   if (document.getElementById("email").value.length > 0) {
-    email_check = Promise.resolve(
-      check_email(document.getElementById("email").value)
-    );
+    email_check = check_email(document.getElementById("email").value);
   }
 
   //Does the remaining checks
@@ -95,16 +92,22 @@ async function form_onSubmit(e) {
           break;
         //Email input validation
         case "email":
+          console.log("Email Check: " + email_check);
+          console.log(email_check);
           if (input.value.length == 0) {
             error_text = "Email cannot be empty";
           } else if (!email.test(input.value)) {
             error_text = "Invalid email";
-          } else if (email_check) {
-            error_text = "Email is already in use, please select something new";
           }
+          // else if (email_result) {
+          //   error_text = "Email is already in use, please select something new";
+          // }
           break;
         //Username input validation
         case "username":
+          console.log("Username Check: ");
+          console.log(username_check);
+
           if (input.value.length < 8 || input.value.length > 20) {
             error_text = "Username must be between 8 - 20 characters";
           } else if (!username.test(input.value)) {
@@ -113,11 +116,13 @@ async function form_onSubmit(e) {
           } else if (input.value.includes("admin")) {
             error_text =
               "Username cannot contain the word admin, please select a new username";
-          } else if (username_check) {
-            error_text =
-              "Username is already in use, please select something new";
           }
+          // else if (username_result) {
+          //   error_text =
+          //     "Username is already in use, please select something new";
+          // }
           break;
+
         //Password input validation
         case "password":
           let confirm = document.getElementById("password-confirm");
@@ -180,6 +185,7 @@ async function check_username(username) {
   );
 
   let data = await valid_username.json();
+
   if (data.status == 200) {
     return data.results;
   } else if (data.status == 400) {
@@ -195,8 +201,7 @@ async function check_email(email) {
   let valid_email = await fetch(`./api/validate_email.php?email=${email}`);
 
   let data = await valid_email.json();
-  console.log("Results: " + data.results);
-  console.log("Status: " + data.status);
+
   if (data.status == 200) {
     return data.results;
   } else if (data.status == 400) {

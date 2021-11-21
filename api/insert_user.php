@@ -63,6 +63,16 @@ if (isset($_POST)) {
                 exit;
             }
         }
+    } else {
+        $error_msg = "error=true&status=400";
+        if ($email_exists) {
+            $error_msg = $error_msg . "&email=exists";
+        }
+        if ($username_exists) {
+            $error_msg = $error_msg . "&username=exists";
+        }
+        header('location:../signup.php?' . $error_msg);
+        exit;
     }
 }
 
