@@ -8,7 +8,7 @@ require('./connection.php');
 session_start();
 
 echo '<pre>';
-echo print_r($_up);
+// echo print_r($_up);
 echo print_r($_POST);
 echo print_r($_SESSION);
 echo '</pre>';

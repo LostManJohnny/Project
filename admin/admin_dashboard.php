@@ -1,8 +1,9 @@
 <?php
+
 //Start session
 session_start();
 //Ensure only admin access
-require('./api/authenticate.php');
+require('./../api/authenticate.php');
 
 $logged_in = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
 
@@ -13,7 +14,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
         "</script type=\'text/javascript\'>";
 } else {
     //Database connection
-    require('./api/connection.php');
+    require('./../api/connection.php');
 
     //Get all the users from the database
     $query = "SELECT OwnerID as ID, CONCAT(FirstName, CONCAT(' ', LastName)) as Fullname, Joindate, Email, Username FROM Owners";
@@ -120,7 +121,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
         <div id="sections" class="d-flex">
             <div id="sections" class="container mt-4">
                 <section id="actions" class="mb-3">
-                    <form action="./api/add_user.php" method="post">
+                    <form action="./../api/add_user.php" method="post">
                         <button id="btn-add_user" name="add" value="add" class="btn btn-success">Add User</button>
                     </form>
                 </section>
@@ -136,7 +137,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                             <p><?= $user['Email'] ?></p>
                             <p><?= $user['Joindate'] ?></p>
                         </li>
-                        <form action="./api/edit_user.php" method="post">
+                        <form action="./../api/edit_user.php" method="post">
                             <button id="btn-update_user" name="edit" class="btn btn-secondary"
                                 value="<?= $user['ID'] ?>">Edit User</button>
                         </form>
