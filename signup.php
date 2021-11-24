@@ -15,6 +15,83 @@ if (isset($_GET) && isset($_GET['status']) && $_GET['status'] == 400) {
     }
 }
 
+//Checks for post variable
+if (isset($_POST) && $_POST != []) {
+    //Get the user validation functions
+    require($root . 'Validation/user_validation.php');
+
+    //Filter, validate and sanitize all the variables
+    [$errors, $sanitized] = filter_sanitize_fname($errors, $sanitized);
+    [$errors, $sanitized] = filter_sanitize_lname($errors, $sanitized);
+    [$errors, $sanitized] = filter_sanitize_birthdate($errors, $sanitized);
+    [$errors, $sanitized] = filter_sanitize_email($errors, $sanitized);
+    [$errors, $sanitized] = filter_sanitize_username($errors, $sanitized);
+
+    //Ensure passwords match
+    $passwords_match = passwords_match($_POST);
+
+    //If passwords match, validate them
+    if ($passwords_match) {
+        [$errors, $sanitized] = filter_sanitize_password($errors, $sanitized);
+        [$errors, $sanitized] = filter_sanitize_passwordConfirmation($errors, $sanitized);
+    }
+
+    //Perform username and email checks
+    $email_exists = isset($sanitized['email']) && email_exists($sanitized['email'], $db);
+    $username_exists = isset($sanitized['username']) && username_exists($sanitized['username'], $db);
+
+    //Checks if the email exists
+    if ($email_exists) {
+        array_push($errors, "Error " . (count($errors) + 1) . " - Email is already in use");
+    }
+    //Checks if the username exists
+    if ($username_exists) {
+        array_push($errors, "Error " . (count($errors) + 1) . " - Username is already in use");
+    }
+
+    //If there are no errors, proceed with creating the user
+    if (count($errors) == 0) {
+
+        //Salt and hash the password, then verify it
+        $hashed_salted_pass = password_hash($sanitized['password'], PASSWORD_BCRYPT);
+        $hashed_salted_pass_VERIFY = password_verify($sanitized['password'], $hashed_salted_pass);
+
+        //If the verify succeeds, insert the user into the database
+        if ($hashed_salted_pass_VERIFY) {
+
+            //Build and prepare the query
+            $query = "INSERT INTO owners (FirstName, LastName, BirthDate, Email, Username, Password) VALUES (:FirstName, :LastName, :BirthDate, :Email, :Username, :Password)";
+            $statement = $db->prepare($query);
+            //Bind values to the query
+            $bind_values = [
+                'FirstName' => $sanitized['fname'],
+                'LastName' => $sanitized['lname'],
+                'BirthDate' => $sanitized['birthdate'],
+                'Email' => $sanitized['email'],
+                'Username' => $sanitized['username'],
+                'Password' => $hashed_salted_pass
+            ];
+            //Execute the statement, storing the result
+            $insert_results = $statement->execute($bind_values);
+
+            if ($insert_results) {
+                header('Location: ' . $root . 'index.php');
+                exit;
+            } else {
+                $alert_msg = "ERROR - User was not added to the database";
+            }
+        }
+    } else {
+        $alert_msg = "An error occured when inserting the user.\\n";
+        if ($email_exists) {
+            $alert_msg = $alert_msg . "The email provided already exists.\\n";
+        }
+        if ($username_exists) {
+            $alert_msg = $alert_msg . "The username provided already exists.\\n";
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -44,11 +121,6 @@ if (isset($_GET) && isset($_GET['status']) && $_GET['status'] == 400) {
     <!-- Personal -->
     <link rel="stylesheet" href="./Styles/styles.css">
     <script src="./js/signup.js"></script>
-    <script>
-    // if ("<?= $alert_msg ?>" != "") {
-    //     alert("<?= $alert_msg ?>");
-    // }
-    </script>
 
     <title>Login</title>
 </head>
@@ -109,8 +181,8 @@ if (isset($_GET) && isset($_GET['status']) && $_GET['status'] == 400) {
     <main>
         <div class="container w-25">
             <!-- Sign up form -->
-            <form action="./api/insert_user.php" method="post"
-                class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary" id="signup-form">
+            <form action="" method="post" class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary"
+                id="signup-form">
                 <h3 class="mx-auto mb-4">Create an Account</h3>
                 <div id="account-error" class="text-danger">
 

@@ -29,7 +29,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
     require($api . 'connection.php');
 
     //Get all the users from the database
-    $query = "SELECT OwnerID as ID, CONCAT(FirstName, CONCAT(' ', LastName)) as Fullname, Joindate, Email, Username FROM Owners";
+    $query = "SELECT OwnerID as ID, CONCAT(FirstName, CONCAT(' ', LastName)) as Fullname, Joindate, Email, Username FROM Owners WHERE Username <> 'admin_user'";
     $statement = $db->prepare($query);
     $statement->execute();
     $users = $statement->fetchAll();
@@ -76,7 +76,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
     <!-- Personal -->
     <link rel="stylesheet" href="<?= $root . "Styles/styles.css" ?>">
     <script>
-    if (<?= isset($add_user_status) ?>) {
+    if (<?= isset($add_user_status) == true ?>) {
         if (<?= $add_user_status == true ?>) {
             alert("User added successfully");
         } else {
@@ -164,7 +164,7 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                             <p><?= $user['Email'] ?></p>
                             <p><?= $user['Joindate'] ?></p>
                         </li>
-                        <form action="./edit_user.php" method="post">
+                        <form action="./edit_user.php" method="get">
                             <button id="btn-update_user" name="edit" class="btn btn-secondary"
                                 value="<?= $user['ID'] ?>">Edit User</button>
                         </form>
@@ -173,7 +173,10 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                     </ul>
                 </section>
                 <!-- $query = "SELECT CardID as ID, Name, Foil, Promo, setCode FROM Cards"; -->
-                <section id="cards" class="overflow-auto" style="height:400px;">
+                <section id="cards" class="overflow-auto" style="height:500px;">
+                    <form action="./add_card.php" method="post">
+                        <button id="btn-add_card" class="btn btn-success">Add Card</button>
+                    </form>
                     <h1>Site Cards</h1>
                     <ul>
                         <?php foreach ($cards as $card) : ?>
@@ -191,11 +194,11 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] != "admin_user") {
                 <section id="collections" class="overflow-auto" style="height:400px;">
                     <h1>Site Collections</h1>
                     <ul>
-                        <?php foreach ($cards as $card) : ?>
+                        <?php foreach ($collections as $collection) : ?>
                         <li>
-                            <h3><?= $card['ID'] ?></h3>
-                            <h3><?= $card['Owner'] ?></h3>
-                            <h5><?= $card['Name'] ?></h5>
+                            <h3><?= $collection['ID'] ?></h3>
+                            <h3><?= $collection['OwnerID'] ?></h3>
+                            <h5><?= $collection['Name'] ?></h5>
                         </li>
                         <?php endforeach; ?>
                     </ul>

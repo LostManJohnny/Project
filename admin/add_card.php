@@ -1,18 +1,9 @@
 <?php
-
 $logged_in = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
 
-$status = null;
-$msg = "";
-if (isset($_GET['status'])) {
-    if ($_GET['status'] == "success") {
-        $status = true;
-        $msg = "Success";
-    } else {
-        $status = false;
-        $msg = "Failed";
-    }
+if (isset($_POST)) {
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -41,27 +32,15 @@ if (isset($_GET['status'])) {
 
     <!-- Personal -->
     <link rel="stylesheet" href="./Styles/styles.css">
-    <script>
-    <?php if ($status) : ?>
-    setTimeout(() => {
-        window.location.href = './index.php';
-    }, 2000);
-    <?php else : ?>
-    setTimeout(() => {
-        window.location.href = './signup.php';
-    }, 2000);
-    <?php endif; ?>
-    </script>
-
-    <title>Sign Up <?= $msg ?></title>
+    <title>Add Card</title>
 </head>
 
 <body>
     <header>
         <div class="container">
             <div class="d-flex flex-row align-items-center justify-content-between mt-3">
-                <a href="./index.php">
-                    <img id="logo" src="./images/icons/logo.png" alt="Logo" class="cursor-pointer">
+                <a href="./../index.php">
+                    <img id="logo" src="./../images/icons/logo.png" alt="Logo" class="cursor-pointer">
                 </a>
                 <form action="">
                     <div class="input-group">
@@ -77,12 +56,13 @@ if (isset($_GET['status'])) {
                 <div class="d-flex flex-row">
                     <!-- If not logged in, show the LOGIN link -->
                     <?php if (!$logged_in) : ?>
-                    <a href="./login.php" id="login" class="d-flex flex-column align-items-center mr-3">
-                        <img src="./images/icons/login.png" alt="Login">
+                    <a href="./../login.php" id="login" class="d-flex flex-column align-items-center mr-3">
+                        <img src="./../images/icons/login.png" alt="Login">
                         <h6 class="">LOGIN</h6>
                     </a>
                     <!-- If already logged in, show the ACCOUNT link -->
                     <?php else : ?>
+
                     <div class="dropdown d-flex flex-column">
                         <button class="btn dropdown-toggle hover-gray:hover" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -91,10 +71,10 @@ if (isset($_GET['status'])) {
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a href="#" class="dropdown-item">Profile</a>
                             <a href="#" class="dropdown-item">Collections</a>
-                            <a href="./api/logout.php" class="dropdown-item">Logout</a>
+                            <a href="./../api/logout.php" class="dropdown-item">Logout</a>
                             <?php if (isset($_SESSION['username']) && $_SESSION['username'] == "admin_user") : ?>
                             <hr>
-                            <a href="./admin/admin_dashboard.php" class="dropdown-item">Admin Dashboard</a>
+                            <a href="./../admin/admin_dashboard.php" class="dropdown-item">Admin Dashboard</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -102,7 +82,7 @@ if (isset($_GET['status'])) {
                     <?php endif; ?>
                     <!-- The cart -->
                     <a href="http://" id="cart" class="d-flex flex-column align-items-center ml-3">
-                        <img src="./images/icons/shopping-cart.png" alt="Cart">
+                        <img src="./../images/icons/shopping-cart.png" alt="Cart">
                         <h6>CART</h6>
                     </a>
                 </div>
@@ -111,15 +91,30 @@ if (isset($_GET['status'])) {
     </header>
 
     <main>
-        <div class="container">
-            <?php if ($status) : ?>
-            <h1>Sign up was successful, you will now be redirected back to the home page.</h1>
-            <?php else : ?>
-            <h1>Sign up was unsuccessful, you will now be redirected back to the signup page.</h1>
-            <?php endif; ?>
+        <div class="container w-25">
+
+            <form action="" class="form d-flex flex-column mx-auto p-3 mt-5 mb-1 border border-primary">
+                <h3 class="mx-auto mb-4">Add Card</h3>
+                <input type="text" placeholder="Card Name" class="input-field mt-3">
+                <input type="text" placeholder="Set Code" class="input-field mt-3">
+                <select name="foil" id="foil_select" class="input-field mt-3">
+                    <option value="true">Foil</option>
+                    <option value="false">Non-Foil</option>
+                </select>
+                <select name="promo" id="promo_select" class="input-field mt-3">
+                    <option value="true">Promo</option>
+                    <option value="false">Non-Promo</option>
+                </select>
+                <hr>
+                <input type="text" placeholder="Scryfall API ID" class="input-field mt-3">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
         </div>
     </main>
 
+    <footer>
+
+    </footer>
 </body>
 
 </html>

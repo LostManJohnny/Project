@@ -146,19 +146,19 @@ function console_log($output, $with_script_tags = true)
         </div>
     </header>
     <main>
-        <h1>Main Start</h1>
-        <div class="container">
+        <div class="container mt-5">
             <div id="recently_added">
-                <?php while ($row = $statement->fetch()) : ?>
-                <li><?= $row['Name'] ?></li>
-                <?php endwhile; ?>
+                <ul class="list-unstyled">
+                    <?php while ($row = $statement->fetch()) : ?>
+                    <li><a href="./card.php?cardID=<?= $row['CardID'] ?>"><?= $row['Name'] ?></a></li>
+                    <?php endwhile; ?>
+                </ul>
                 <span id="recently-added-vm" class="cursor-pointer">View All</span>
             </div>
         </div>
     </main>
     <footer>
-        <h1>Footer Start</h1>
-        <div class="container">
+        <div class="container mt-5">
             <div id="attribution">
                 <h5>Attributions</h5>
                 <h6>Icons made by:</h6>
